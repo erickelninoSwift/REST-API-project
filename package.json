@@ -1,0 +1,24 @@
+{
+  "name": "rest-api-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erickelninoSwift/REST-API-project.git"
+  },
+  "author": "eriik",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/erickelninoSwift/REST-API-project/issues"
+  },
+  "homepage": "https://github.com/erickelninoSwift/REST-API-project#readme",
+  "devDependencies": {
+    "express": "^4.18.2",
+    "nodemon": "^2.0.22"
+  }
+}
