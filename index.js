@@ -31,12 +31,27 @@ const products = [
 
   // Show list of products
 app.get('/API/products',(req,res) =>{
-    
+
     res.json(products);
 
 });
 
 // -================================
+
+// Show a specifi products
+
+app.get('/API/products/:id',(req,res) =>{
+    const myId = req.params.id;
+
+    const currentProducts = products.find(data =>{
+        return data.id === myId;
+    });
+    currentProducts ? res.status(200).send(currentProducts): res.status(404).json({
+        error: 'No data found'
+    });
+});
+
+
 
 app.listen(PORT,() =>{
     console.log(`Server is running on Port: ${PORT}`);
