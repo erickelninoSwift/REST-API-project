@@ -11,6 +11,33 @@ app.get('/',(req,res) =>{
 
 });
 
+
+const products = [
+    {
+        id: '1',
+        name: 'Orange',
+        price: 30
+
+    },
+    {
+        id: '2',
+        name: 'Banana',
+        price:  55
+
+    }
+
+  
+]
+
+  // Show list of products
+app.get('/API/products',(req,res) =>{
+    
+    res.json(products);
+
+});
+
+// -================================
+
 app.listen(PORT,() =>{
     console.log(`Server is running on Port: ${PORT}`);
 
