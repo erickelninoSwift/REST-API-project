@@ -1,6 +1,10 @@
 const path = require('path');
 const express = require('express');
+const exp = require('constants');
 const app = express();
+const {uuidv4} = require('uuid');
+
+
 
 const PORT = process.env.PORT || 3500;
 
@@ -49,6 +53,25 @@ app.get('/API/products/:id',(req,res) =>{
     currentProducts ? res.status(200).send(currentProducts): res.status(404).json({
         error: 'No data found'
     });
+});
+
+//  post a product or insert data 
+
+app.use(express.json());
+
+app.post('/API/products',(req,res) =>{
+
+        const product = {
+
+            name : req.body.name,
+            price : req.body.price
+        }
+
+
+        products.push(product);
+
+        res.status(200).json(products);
+
 });
 
 
