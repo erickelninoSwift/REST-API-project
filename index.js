@@ -2,8 +2,8 @@ const path = require('path');
 const express = require('express');
 const exp = require('constants');
 const app = express();
-const {uuidv4} = require('uuid');
-
+const {v4: uuidv4} = require('uuid');
+const Joi = require('joi');
 
 
 const PORT = process.env.PORT || 3500;
@@ -61,18 +61,43 @@ app.use(express.json());
 
 app.post('/API/products',(req,res) =>{
 
+    const result = schema.validate(req.body);
+
+
+       const schema = Joi.object({
+
+            name: Joi.string().min(3).max(3000).required(),
+            Price: Joi.number().required()
+
+       });
+
+       if(result.error)
+       {
+        return res.status(404).json({
+
+            message : error.details[0].message
+        });
+       }
+
+    
+
         const product = {
 
+            id: uuidv4(),
             name : req.body.name,
-            price : req.body.price
+            price : req.body.Price
         }
-
 
         products.push(product);
 
-        res.status(200).json(products);
+        res.json(result);
+
 
 });
+
+// Update Alldata
+
+
 
 
 
