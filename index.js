@@ -4,6 +4,7 @@ const exp = require('constants');
 const app = express();
 const {v4: uuidv4} = require('uuid');
 const Joi = require('joi');
+const { chownSync } = require('fs');
 
 
 const PORT = process.env.PORT || 3500;
@@ -15,6 +16,8 @@ app.get('/',(req,res) =>{
 
 });
 
+
+app.use(express.json());
 
 const products = [
     {
@@ -33,101 +36,100 @@ const products = [
   
 ]
 
-  // Show list of products
-app.get('/API/products',(req,res) =>{
+//   // Show list of products
+// app.get('/API/products',(req,res) =>{
 
-    res.json(products);
+//     res.json(products);
 
-});
+// });
 
-// -================================
+// // -================================
 
-// Show a specifi products
+// // Show a specifi products
 
-app.get('/API/products/:id',(req,res) =>{
-    const myId = req.params.id;
+// app.get('/API/products/:id',(req,res) =>{
+//     const myId = req.params.id;
 
-    const currentProducts = products.find(data =>{
-        return data.id === myId;
-    });
-    currentProducts ? res.status(200).send(currentProducts): res.status(404).json({
-        error: 'No data found'
-    });
-});
+//     const currentProducts = products.find(data =>{
+//         return data.id === myId;
+//     });
+//     currentProducts ? res.status(200).send(currentProducts): res.status(404).json({
+//         error: 'No data found'
+//     });
+// });
 
-//  post a product or insert data 
+// //  post a product or insert data 
 
-app.use(express.json());
+// app.use(express.json());
 
-app.post('/API/products',(req,res) =>{
+// app.post('/API/products',(req,res) =>{
 
-    const error = validation(req.body);
-       if(error)
-       {
-        return res.status(404).json({
+//     const {error} = validation(req.body);
 
-            message : error.details[0].message
-        });
-       }
+//        if(error)
+//        {
+//         return res.status(404).json({
 
-    
+//             message : error.details[0].message
+//         });
+//        }
 
-        const product = {
+//         const product = {
 
-            id: uuidv4(),
-            name : req.body.name,
-            price : req.body.Price
-        }
+//             id: uuidv4(),
+//             name : req.body.name,
+//             price : req.body.Price
+//         }
 
-        products.push(product);
+//         products.push(product);
 
-        res.json(result);
+//         res.json(result);
 
 
-});
+// });
 
 // Update Alldata
 
-app.put('/API/products/:id',(res,req) =>{
+app.put('/API/products/:id',(req,res) =>{
 
-   const error = validation(req.body);
+   const {error} = validation(req.body);
 
-   if(error)
-   {
-    return res.status(404).json({
-
-        message : error.details[0].message
+   console.log(error);
+  if(error)
+  {
+    return res.status(400).json({
+        message: error.details[0].message
     });
-   }
+  }
+   
 
    const index = products.findIndex(data =>{
     return data.id === req.params.id;
    });
 
-   console.log(`Id : ${index}`);
+   console.log(`Index of the object : ${index}`);
 
    if(index === -1)
    {
-    
    res.status(404).json({
     message: 'Product was not found '
    });
 
    }
 
+//    console.log(`Name: ${req.body}`);
+//    console.log(`Price: ${req.body}`);
+   products[index].name = products[index].name ;
+   products[index].price = products[index].price ;
 
-   products[index].name = req.body.name;
-   products[index].price = req.body.Price;
-
+     console.log(req.body);
 
    return res.json({
     
-
       myproducts: products[index]
          
    });
-
-
+   
 });
 
 const validation = (body) =>{
@@ -150,7 +152,3 @@ app.listen(PORT,() =>{
 
 })
 
-process.on('uncaughtException', error =>{
-    console.log(`Error was found :${error}`);
-    process.exit(1);
-});
