@@ -17,9 +17,11 @@ app.get('/',(req,res) =>{
 });
 
 
+
+
 app.use(express.json());
 
-const products = [
+let products = [
     {
         id: '1',
         name: 'Orange',
@@ -94,7 +96,7 @@ app.put('/API/products/:id',(req,res) =>{
 
    const {error} = validation(req.body);
 
-   console.log(error);
+  
   if(error)
   {
     return res.status(400).json({
@@ -115,20 +117,104 @@ app.put('/API/products/:id',(req,res) =>{
     message: 'Product was not found '
    });
 
+   }else
+   {
+     
+   products[index].name = req.body.name ;
+   products[index].price = req.body.Price ;
+
+    //  console.log(req.body);
+
+   return res.json(products[index]);
+   }
+   
+
+   console.log(products[index]);
+   
+});
+
+
+app.patch('/API/products/:id',(req,res) =>{
+
+    const mycurrentID = req.params.id;
+
+    const currentIndex = products.findIndex(data =>{
+        return data.id === mycurrentID
+    });
+
+    if(currentIndex === -1)
+    {
+        res.status(404).json({
+            message: 'Data selected was not found in the record'
+        });
+    }
+    let updatedProduct = {
+         ...products[currentIndex],
+         ...req.body
+    }
+
+    products[currentIndex] = updatedProduct;
+    console.log(updatedProduct);
+
+
+    return res.json({
+        updatedProduct
+    })
+});
+
+// app.delete('/API/products/:id',(req,res) =>{
+
+//       const index = products.findIndex(data =>{
+
+//          return data.id === req.params.id
+//       });
+
+//       if(index === -1)
+//       {
+//         res.status(404).json({
+
+//             message : 'Data to delete was not found'
+
+//         });
+//       }
+//       const newproduct = products.filter(data =>{
+//         return data.id !== req.params.id
+//       });
+
+//        products = newproduct;
+
+//        res.status(200).json(newproduct);
+
+// });
+
+
+// Deletev everything 
+
+app.delete('/API/products/:id',(req,res) =>{
+
+   const productSelected = products.find(data =>{
+    return data.id === req.params.id
+   });
+
+   if(!productSelected)
+   {
+        res.json({
+            message : 'There was record found '
+        });
    }
 
-//    console.log(`Name: ${req.body}`);
-//    console.log(`Price: ${req.body}`);
-   products[index].name = products[index].name ;
-   products[index].price = products[index].price ;
 
-     console.log(req.body);
 
-   return res.json({
-    
-      myproducts: products[index]
-         
-   });
+      const index = products.findIndex(data =>{
+        return data.id === productSelected.id
+      });
+
+      products.splice(index,1);
+
+      return res.status(200).json({
+        productSelected
+      });
+
    
 });
 
@@ -139,7 +225,6 @@ const validation = (body) =>{
 
         name: Joi.string().min(3).max(3000).required(),
         Price: Joi.number().required()
-
    });
 
    return schema.validate(body);
