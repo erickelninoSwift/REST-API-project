@@ -61,17 +61,8 @@ app.use(express.json());
 
 app.post('/API/products',(req,res) =>{
 
-    const result = schema.validate(req.body);
-
-
-       const schema = Joi.object({
-
-            name: Joi.string().min(3).max(3000).required(),
-            Price: Joi.number().required()
-
-       });
-
-       if(result.error)
+    const error = validation(req.body);
+       if(error)
        {
         return res.status(404).json({
 
@@ -97,8 +88,61 @@ app.post('/API/products',(req,res) =>{
 
 // Update Alldata
 
+app.put('/API/products/:id',(res,req) =>{
+
+   const error = validation(req.body);
+
+   if(error)
+   {
+    return res.status(404).json({
+
+        message : error.details[0].message
+    });
+   }
+
+   const index = products.findIndex(data =>{
+    return data.id === req.params.id;
+   });
+
+   console.log(`Id : ${index}`);
+
+   if(index === -1)
+   {
+    
+   res.status(404).json({
+    message: 'Product was not found '
+   });
+
+   }
 
 
+   products[index].name = req.body.name;
+   products[index].price = req.body.Price;
+
+
+   return res.json({
+    
+
+      myproducts: products[index]
+         
+   });
+
+
+});
+
+const validation = (body) =>{
+
+
+    const schema = Joi.object({
+
+        name: Joi.string().min(3).max(3000).required(),
+        Price: Joi.number().required()
+
+   });
+
+   return schema.validate(body);
+
+}
 
 
 app.listen(PORT,() =>{
