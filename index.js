@@ -218,6 +218,25 @@ app.delete('/API/products/:id',(req,res) =>{
    
 });
 
+app.delete('/API/products/',(req,res) =>{
+
+    if(products.length > 0)
+    {
+        products.splice(0,products.length);
+
+        res.status(200).json({
+            products
+        })
+       console.log('product list is Empty');
+    }else
+    {
+        res.status(404).json({
+            message : 'There is no data recorded in the database'
+        });
+    }
+
+});
+
 const validation = (body) =>{
 
 
